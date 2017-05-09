@@ -1,28 +1,28 @@
 # spring-tx-eventpublisher [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-A plugin for Spring Framework 3.2 in order to publishing events only after a successfull transaction.
+A plugin for Spring Framework 3.2 for publishing events only after a successfull transaction.
 
-This plugin wants to add in projects still using Spring 3.2 a similar feature implemented by the [@TransactionalEventListener](https://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2) annotation available in Spring 4.
+This plugin could be useful in projects still using Spring 3.2, because adds to these projects a similar feature implemented by using the [@TransactionalEventListener](https://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2) annotation available in Spring 4.
 
 # Requisites
 
 * Java 1.6 or higher
-* Spring 3.2 or higher (but for Spring 4 uses [@TransactionalEventListener](https://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2) annnotation)
-* [spring-tx-eventdispatcher](https://github.com/diepet/spring-tx-eventdispatcher)
+* Spring 3.2 or higher (but for Spring 4 uses [@TransactionalEventListener](https://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2) annotation)
+* [spring-tx-lifecycle](https://github.com/diepet/spring-tx-lifecycle)
 * [spring-tx-context](https://github.com/diepet/spring-tx-context)
 
 
 # Configuration
 
-* Configure a transaction manager as explained [here](https://github.com/diepet/spring-tx-eventdispatcher), in order to dispatch transaction lifecycle events.
-* Configure a transaction context manager as explained [here](https://github.com/diepet/spring-tx-manager).
+* Configure a transaction manager as explained [here](https://github.com/diepet/spring-tx-lifecycle), in order to dispatch transaction lifecycle events.
+* Configure a transaction context manager as explained [here](https://github.com/diepet/spring-tx-context).
 * Import `META-INF/eventpublisher-tx-spring-application-context.xml` Spring configuration file.
 * Define a new Spring bean inheriting its configuration from `transactionalEventPublisherAbstract` abstract bean and injects the transaction context manager by setting the property `transactionContextManager`.
 
 Example:
 
 ```xml
-	<!-- TX Manager configuration by using spring-tx-eventdispatcher -->		
-	<bean id="transactionManager" class="it.diepet.spring.tx.eventdispatcher.EventDispatcherJpaTransactionManager">
+	<!-- TX Manager configuration by using spring-tx-lifecycle -->		
+	<bean id="transactionManager" class="it.diepet.spring.tx.lifecycle.EventDispatcherJpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory"></property>
 	</bean>
 	
@@ -90,7 +90,8 @@ public class ProductServiceImpl implements ProductService {
 		
 		// some db stuff
 		
-		// the event will be published only if the transaction completes successfully
+		// the event will be published automatically later, 
+		// only if the transaction completes successfully
 		transactionalEventPublisher.publishEvent(new CustomTransactionalEvent("Product created"));
 		
 		// some db stuff
@@ -131,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		// some db stuff
 		
-		// the event will be published only if the transaction completes successfully
+		// the event will be published after that the transaction completes successfully
 		transactionalEventPublisher.publishEvent(new CustomTransactionalEvent("Launched f()"));
 		
 		// some db stuff
@@ -139,7 +140,8 @@ public class ProductServiceImpl implements ProductService {
 
 	public void g() {
 		
-		// the event will be published immediately, because g() does not have a @Transactional annotation
+		// the event will be published immediately, 
+		// because g() does not have a @Transactional annotation
 		transactionalEventPublisher.publishEvent(new CustomTransactionalEvent("Launched g()"));
 		
 	}
