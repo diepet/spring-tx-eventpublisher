@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Abstract bean definition of the transactional event publisher -->
+	<bean 
+		id="transactionalEventPublisherAbstract" 
+		class="it.diepet.spring.tx.eventpublisher.impl.TransactionalEventPublisherImpl" 
+		abstract="true">
+	</bean>
+	
+	<!-- 
+		In your Spring configuration extends the transactionalEventPublisherAbstract bean 
+		and sets the transaction context manager.
+		 
+		Example:
+		
+		<bean id="transactionalEventPublisher" parent="transactionalEventPublisherAbstract">
+			<property name="transactionContextManager" ref="transactionaContextManager" />
+		</bean> 
+	-->
+
+</beans>
