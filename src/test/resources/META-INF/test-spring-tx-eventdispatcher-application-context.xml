@@ -79,4 +79,8 @@ http://www.springframework.org/schema/jdbc http://www.springframework.org/schema
 		<property name="transactionContextManager" ref="transactionContextManager" />
 	</bean> 
 
+	<bean id="customTransactionalEventListener" class="it.diepet.spring.tx.eventpublisher.test.app.listener.CustomTransactionalEventListener" />
+	<bean id="notTransactionalEventListener" class="it.diepet.spring.tx.eventpublisher.test.app.listener.NotTransactionalEventListener" />
+	
+
 </beans>

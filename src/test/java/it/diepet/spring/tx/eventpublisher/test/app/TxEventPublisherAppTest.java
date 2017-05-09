@@ -45,4 +45,54 @@ public class TxEventPublisherAppTest {
 		Assert.assertEquals("productService.findAll()", stringList.get(1));
 	}
 
+	@Test
+	public void testPublishTransactionalEvent() {
+		productService.publishTransactionalEvent();
+		List<String> stringList = StringCollector.getList();
+		Assert.assertNotNull(stringList);
+		Assert.assertEquals(3, stringList.size());
+		Assert.assertEquals("BEFORE PUBLISHING", stringList.get(0));
+		Assert.assertEquals("AFTER PUBLISHING", stringList.get(1));
+		Assert.assertEquals("Processed transactional event having message: publishTransactionalEvent",
+				stringList.get(2));
+	}
+
+	@Test
+	public void testPublishNotTransactionalEvent() {
+		productService.publishNotTransactionalEvent();
+		List<String> stringList = StringCollector.getList();
+		Assert.assertNotNull(stringList);
+		Assert.assertEquals(3, stringList.size());
+		Assert.assertEquals("BEFORE PUBLISHING", stringList.get(0));
+		Assert.assertEquals("Processed NOT transactional event having message: publishNotTransactionalEvent",
+				stringList.get(1));
+		Assert.assertEquals("AFTER PUBLISHING", stringList.get(2));
+	}
+
+	@Test
+	public void testPublishTransactionalEventWithoutTransactionalAnnotation() {
+		productService.publishTransactionalEventWithoutTransactionalAnnotation();
+		List<String> stringList = StringCollector.getList();
+		Assert.assertNotNull(stringList);
+		Assert.assertEquals(3, stringList.size());
+		Assert.assertEquals("BEFORE PUBLISHING", stringList.get(0));
+		Assert.assertEquals(
+				"Processed transactional event having message: publishTransactionalEventWithoutTransactionalAnnotation",
+				stringList.get(1));
+		Assert.assertEquals("AFTER PUBLISHING", stringList.get(2));
+	}
+
+	@Test
+	public void testPublishNotTransactionalEventWithoutTransactionalAnnotation() {
+		productService.publishNotTransactionalEventWithoutTransactionalAnnotation();
+		List<String> stringList = StringCollector.getList();
+		Assert.assertNotNull(stringList);
+		Assert.assertEquals(3, stringList.size());
+		Assert.assertEquals("BEFORE PUBLISHING", stringList.get(0));
+		Assert.assertEquals(
+				"Processed NOT transactional event having message: publishNotTransactionalEventWithoutTransactionalAnnotation",
+				stringList.get(1));
+		Assert.assertEquals("AFTER PUBLISHING", stringList.get(2));
+	}
+
 }

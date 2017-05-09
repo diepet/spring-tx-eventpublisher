@@ -10,4 +10,11 @@ public interface ProductService {
 
 	List<Product> findAll();
 
+	void publishTransactionalEvent();
+
+	void publishNotTransactionalEvent();
+
+	void publishTransactionalEventWithoutTransactionalAnnotation();
+
+	void publishNotTransactionalEventWithoutTransactionalAnnotation();
 }

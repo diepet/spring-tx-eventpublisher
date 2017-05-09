@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import it.diepet.spring.tx.context.TransactionContextManager;
+import it.diepet.spring.tx.eventpublisher.TransactionalEventPublisher;
 import it.diepet.spring.tx.eventpublisher.test.app.dao.ProductDAO;
+import it.diepet.spring.tx.eventpublisher.test.app.event.CustomTransactionalEvent;
+import it.diepet.spring.tx.eventpublisher.test.app.event.NotTransactionalEvent;
 import it.diepet.spring.tx.eventpublisher.test.app.model.Product;
 import it.diepet.spring.tx.eventpublisher.test.util.StringCollector;
 
@@ -20,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
 	private ProductDAO productDAO;
 
 	@Autowired
-	private TransactionContextManager transactionContextManager;
+	private TransactionalEventPublisher transactionalEventPublisher;
 
 	@Override
 	@Transactional
@@ -28,9 +30,6 @@ public class ProductServiceImpl implements ProductService {
 		LOGGER.debug("[START] add()");
 		StringCollector.add("productService.add()");
 		productDAO.create(product);
-		transactionContextManager.getTransactionContext().setAttribute("operation", "add");
-		transactionContextManager.getTransactionContext().addListAttribute("productList", product);
-		transactionContextManager.getTransactionContext().addSetAttribute("productSet", product);
 		LOGGER.debug("[END] add()");
 	}
 
@@ -40,9 +39,48 @@ public class ProductServiceImpl implements ProductService {
 		LOGGER.debug("[START] findAll()");
 		StringCollector.add("productService.findAll()");
 		List<Product> result = productDAO.findAll();
-		transactionContextManager.getTransactionContext().setAttribute("operation", "findAll");
 		LOGGER.debug("[END] findAll()");
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public void publishTransactionalEvent() {
+		LOGGER.debug("[START] publishTransactionalEvent()");
+		StringCollector.add("BEFORE PUBLISHING");
+		transactionalEventPublisher.publishEvent(new CustomTransactionalEvent("publishTransactionalEvent"));
+		StringCollector.add("AFTER PUBLISHING");
+		LOGGER.debug("[END] publishTransactionalEvent()");
+	}
+
+	@Override
+	@Transactional
+	public void publishNotTransactionalEvent() {
+		LOGGER.debug("[START] publishNotTransactionalEvent()");
+		StringCollector.add("BEFORE PUBLISHING");
+		transactionalEventPublisher.publishEvent(new NotTransactionalEvent("publishNotTransactionalEvent"));
+		StringCollector.add("AFTER PUBLISHING");
+		LOGGER.debug("[END] publishNotTransactionalEvent()");
+	}
+
+	@Override
+	public void publishTransactionalEventWithoutTransactionalAnnotation() {
+		LOGGER.debug("[START] publishTransactionalEventWithoutTransactionalAnnotation()");
+		StringCollector.add("BEFORE PUBLISHING");
+		transactionalEventPublisher
+				.publishEvent(new CustomTransactionalEvent("publishTransactionalEventWithoutTransactionalAnnotation"));
+		StringCollector.add("AFTER PUBLISHING");
+		LOGGER.debug("[END] publishTransactionalEventWithoutTransactionalAnnotation()");
+	}
+
+	@Override
+	public void publishNotTransactionalEventWithoutTransactionalAnnotation() {
+		LOGGER.debug("[START] publishNotTransactionalEventWithoutTransactionalAnnotation()");
+		StringCollector.add("BEFORE PUBLISHING");
+		transactionalEventPublisher
+				.publishEvent(new NotTransactionalEvent("publishNotTransactionalEventWithoutTransactionalAnnotation"));
+		StringCollector.add("AFTER PUBLISHING");
+		LOGGER.debug("[END] publishNotTransactionalEventWithoutTransactionalAnnotation()");
 	}
 
 }
