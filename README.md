@@ -114,7 +114,7 @@ are two different interfaces, but share the same method for publishing events:
 
 `void publishEvent(ApplicationEvent event);`
 
-So the transactional event publisher can be used for publishing events any kind of event. But if the published event  extend the `org.springframework.context.ApplicationEvent` class but not `it.diepet.spring.tx.eventpublisher.event.TransactionalEvent` then the event will be published immediately, just like the Spring `org.springframework.context.ApplicationEventPublisher` should do.
+So the transactional event publisher can be used for publishing any kind of Spring event class. But if the published event extend the `org.springframework.context.ApplicationEvent` class but not extend `it.diepet.spring.tx.eventpublisher.event.TransactionalEvent` class, than the event will be published immediately just like the Spring `org.springframework.context.ApplicationEventPublisher` should do.
 
 Likewise, if we publish an event using `it.diepet.spring.tx.eventpublisher.TransactionalEventPublisher` in an operation executed outside a transaction, the event will be published immediately (even if the class event is a subclass of `it.diepet.spring.tx.eventpublisher.event.TransactionalEvent`).
 
