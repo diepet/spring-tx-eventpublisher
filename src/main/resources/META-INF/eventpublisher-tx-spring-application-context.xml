@@ -7,6 +7,12 @@
 		id="transactionalEventPublisherAbstract" 
 		class="it.diepet.spring.tx.eventpublisher.impl.TransactionalEventPublisherImpl" 
 		abstract="true">
+		
+		<!-- DO NOT OVERRIDES THESE PROPERTIES -->
+		<property name="transactionContextEventListener">
+			<bean class="it.diepet.spring.tx.eventpublisher.impl.listener.TransactionContextEventListener" />
+		</property>
+		
 	</bean>
 	
 	<!-- 

@@ -1,4 +1,4 @@
-package it.diepet.spring.tx.eventpublisher.constants;
+package it.diepet.spring.tx.eventpublisher.impl.constants;
 
 /**
  * The Interface Constants.

@@ -2,14 +2,16 @@ package it.diepet.spring.tx.eventpublisher.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 import it.diepet.spring.tx.context.TransactionContextManager;
 import it.diepet.spring.tx.eventpublisher.TransactionalEventPublisher;
-import it.diepet.spring.tx.eventpublisher.constants.Constants;
 import it.diepet.spring.tx.eventpublisher.event.TransactionalEvent;
+import it.diepet.spring.tx.eventpublisher.impl.constants.Constants;
+import it.diepet.spring.tx.eventpublisher.impl.listener.TransactionContextEventListener;
 
 public class TransactionalEventPublisherImpl implements TransactionalEventPublisher, ApplicationEventPublisherAware {
 
@@ -21,6 +23,19 @@ public class TransactionalEventPublisherImpl implements TransactionalEventPublis
 
 	/** The transaction context manager. */
 	private TransactionContextManager transactionContextManager;
+
+	/**
+	 * The transaction context event listener for publishing the transactional
+	 * events collected.
+	 * 
+	 * This property is unused, but it is injected here in order to collect in
+	 * an unique abstract Spring bean the definitions of all beans needed and
+	 * simplify the module configuration by inheriting one only abstract Spring
+	 * bean.
+	 * 
+	 */
+	@SuppressWarnings("unused")
+	private TransactionContextEventListener transactionContextEventListener;
 
 	/*
 	 * (non-Javadoc)
@@ -58,7 +73,18 @@ public class TransactionalEventPublisherImpl implements TransactionalEventPublis
 	 * @param transactionContextManager
 	 *            the new transaction context manager
 	 */
+	@Required
 	public void setTransactionContextManager(final TransactionContextManager transactionContextManager) {
 		this.transactionContextManager = transactionContextManager;
+	}
+
+	/**
+	 * Sets the transaction context event listener.
+	 *
+	 * @param transactionContextEventListener
+	 *            the new transaction context event listener
+	 */
+	public void setTransactionContextEventListener(TransactionContextEventListener transactionContextEventListener) {
+		this.transactionContextEventListener = transactionContextEventListener;
 	}
 }
