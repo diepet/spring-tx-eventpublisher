@@ -1,5 +1,5 @@
 # spring-tx-eventpublisher [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-A plugin for Spring Framework 3.2 for publishing events only after a successfull transaction.
+A Spring Framework 3.2 plugin for publishing events only after a successfull transaction.
 
 This plugin could be useful in projects still using Spring 3.2, because adds to these projects a similar feature implemented by using the [@TransactionalEventListener](https://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2) annotation available in Spring 4.
 
@@ -114,7 +114,7 @@ are two different interfaces, but share the same method for publishing events:
 
 `void publishEvent(ApplicationEvent event);`
 
-So the transactional event publisher can be used for publishing events that extend the `org.springframework.context.ApplicationEvent` class but not `it.diepet.spring.tx.eventpublisher.event.TransactionalEvent` class. In this case the transactional event publisher will publish immediately the event, just like the Spring `org.springframework.context.ApplicationEventPublisher` should do.
+So the transactional event publisher can be used for publishing events any kind of event. But if the published event  extend the `org.springframework.context.ApplicationEvent` class but not `it.diepet.spring.tx.eventpublisher.event.TransactionalEvent` then the event will be published immediately, just like the Spring `org.springframework.context.ApplicationEventPublisher` should do.
 
 Likewise, if we publish an event using `it.diepet.spring.tx.eventpublisher.TransactionalEventPublisher` in an operation executed outside a transaction, the event will be published immediately (even if the class event is a subclass of `it.diepet.spring.tx.eventpublisher.event.TransactionalEvent`).
 
